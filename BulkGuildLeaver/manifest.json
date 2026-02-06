@@ -1,0 +1,7 @@
+{
+  "name": "BulkGuildLeaver",
+  "description": "Leave multiple Discord servers at once",
+  "version": "1.0.0",
+  "author": "Yenz",
+  "main": "index.js"
+}
