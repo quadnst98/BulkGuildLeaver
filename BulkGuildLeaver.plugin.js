@@ -1,14 +1,14 @@
-export const manifest = {
-    name: "BulkGuildLeaver",
-    description: "Leave multiple Discord servers at once from Revenge settings",
-    version: "1.0.0",
-    author: "Yenz"
-};
-
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
 export default {
+    manifest: {
+        name: "BulkGuildLeaver",
+        description: "Leave multiple Discord servers at once from Revenge settings",
+        version: "1.0.1",
+        author: "Yenz"
+    },
+
     start() {
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
         const wp = window.webpackChunkdiscord_app.push([
             [Symbol()],
             {},
@@ -39,10 +39,12 @@ export default {
                 setSelected(s);
             };
 
-            const selectAll = () => setSelected(new Set(guilds.map(g => g.id)));
+            const selectAll = () =>
+                setSelected(new Set(guilds.map(g => g.id)));
+
             const clearAll = () => setSelected(new Set());
 
-            const confirm = () => {
+            const confirmLeave = () => {
                 if (!selected.size) return;
 
                 Modal.openModal(props =>
@@ -54,7 +56,9 @@ export default {
                                 props.onClose();
                                 for (const id of selected) {
                                     try {
-                                        await RestAPI.del({ url: `/users/@me/guilds/${id}` });
+                                        await RestAPI.del({
+                                            url: `/users/@me/guilds/${id}`
+                                        });
                                         await sleep(1200);
                                     } catch {}
                                 }
@@ -71,7 +75,10 @@ export default {
             return React.createElement("div", {}, [
                 React.createElement("h3", {}, "Bulk Server Leaver"),
                 React.createElement("button", { onClick: selectAll }, "Select All"),
-                React.createElement("button", { onClick: clearAll, style: { marginLeft: 6 } }, "Clear"),
+                React.createElement("button", {
+                    onClick: clearAll,
+                    style: { marginLeft: 6 }
+                }, "Clear"),
                 React.createElement("div", {
                     style: { maxHeight: 350, overflowY: "auto", marginTop: 10 }
                 }, guilds.map(g =>
@@ -89,7 +96,7 @@ export default {
                 )),
                 React.createElement("button", {
                     style: { marginTop: 10 },
-                    onClick: confirm
+                    onClick: confirmLeave
                 }, `Leave Selected (${selected.size})`)
             ]);
         };
